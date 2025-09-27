@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+:root {
+  /* Color Variables */
+  --primary-color: #ffffff;
+  --secondary-color: #f5811f;
+  --color-footer: #333;
+  --color-text: #4a4f60;
+  --color-text-secondary: #0369bc;
+  --borber-r-color: #0000ff;
+
+  /* Logo  Variables */
+  --logo-galaxy: url('/src/assets/logo/galaxy-logo-mobile.png');
+
+
+
+}
+
+
+body::-webkit-scrollbar {
+  display: none;
+}
