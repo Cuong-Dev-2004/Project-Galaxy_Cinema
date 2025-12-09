@@ -1,130 +1,107 @@
+const ProductCategory = require("../models/ProductCategory");
+// Import Model Sản phẩm thực tế để quản lý mối quan hệ
+const Products = require("../models/Products");
 
-const ProductCategory = require("../models/ProductCategory")
 
+const CategoryController = {
 
-
-
-const ProductCategoryController = {
-    // Get/Get All title của Product Category
-    RenderTitleProduct: async (req, res) => {
+    /**
+     * GET: Lấy tất cả tên danh mục sản phẩm (chỉ lấy trường title)
+     */
+    getAllCategoryTitles: async (req, res) => {
         try {
-            const categories = await ProductCategory.find({}, 'title');
-            res.status(200).json(categories)
+            // Chỉ chọn trường 'title'
+            const categories = await ProductCategory.find({});
+            res.status(200).json(categories);
         } catch (error) {
-            res.status(500).json(error);
+            console.error("Error fetching category titles:", error);
+            res.status(500).json({ error: "Server error during fetch", details: error.message });
         }
     },
-    //  Post/Register Product Category
-    RegisterProducts: async (req, res) => {
+
+    /**
+     * POST: Tạo mới một danh mục sản phẩm
+     */
+    createCategory: async (req, res) => {
         try {
-            const { title } = req.body;
+            const { title, path } = req.body;
 
             if (!title || title.trim() === "") {
-                return res.status(400).json({ error: "Title is required" });
+                return res.status(400).json({ error: "Title is required and cannot be empty." });
             }
-            const productCategory = new ProductCategory({
-                title: title.trim()
+
+            const newCategory = await ProductCategory.create({
+                title: title.trim(),
+                path: path.trim()
             });
-            await productCategory.save();
-            res.status(200).json(productCategory);
+
+            res.status(201).json(newCategory);
+
         } catch (error) {
-            res.status(500).json(error);
+            if (error.code && error.code === 11000) {
+                return res.status(409).json({ error: "This category title already exists." });
+            }
+            console.error("Error creating category:", error);
+            res.status(500).json({ error: "Server error during creation", details: error.message });
         }
     },
-    // Post/Changer Products 
-    UpdateCategoryTitle: async (req, res) => {
+
+
+    updateCategoryTitle: async (req, res) => {
         try {
-            const { oldTitle, newTitle } = req.body;
+            const oldTitle = req.params.oldTitle || req.body.oldTitle;
+            const { newTitle } = req.body;
+
 
             if (!oldTitle || !newTitle || newTitle.trim() === "") {
-                return res.status(400).json({ error: "Both oldTitle and newTitle are required" });
+                return res.status(400).json({ error: "Both oldTitle and newTitle are required." });
             }
 
             const updated = await ProductCategory.findOneAndUpdate(
-                { title: oldTitle },
+                { title: oldTitle.trim() },
                 { title: newTitle.trim() },
-                { new: true }
+                { new: true, runValidators: true }
             );
 
             if (!updated) {
-                return res.status(404).json({ error: "Category not found" });
+                return res.status(404).json({ error: `Category with title "${oldTitle}" not found.` });
             }
 
-            res.status(200).json({ message: "Title updated successfully", updated });
+            res.status(200).json({ message: "Category title updated successfully.", updated });
+
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            if (error.code && error.code === 11000) {
+                return res.status(409).json({ error: `New title "${req.body.newTitle}" already exists.` });
+            }
+            console.error("Error updating category:", error);
+            res.status(500).json({ error: "Server error during update", details: error.message });
         }
     },
-    // Post/Delete 
-    DeleteItemTitleProduct: async (req, res) => {
+
+    /**
+     * DELETE: Xóa một danh mục chỉ bằng title (Lấy title từ req.params theo route DELETE /categories/:title)
+     */
+    deleteCategoryByTitle: async (req, res) => {
         try {
-            const { title } = req.body;
+            const { title } = req.params;
 
             if (!title || title.trim() === "") {
-                return res.status(400).json({ error: "Title is required" });
+                return res.status(400).json({ error: "Title is required for deletion." });
             }
 
             const result = await ProductCategory.deleteOne({ title: title.trim() });
 
             if (result.deletedCount === 0) {
-                return res.status(404).json({ error: "Category not found" });
+                return res.status(404).json({ error: `Category with title "${title}" not found.` });
             }
 
-            res.status(200).json({ message: "Category deleted successfully" });
+            res.status(200).json({ message: `Category "${title}" deleted successfully.` });
         } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-    // POST: Xóa category nếu có sản phẩm kèm xác nhận
-    DeleteCategoryWithProducts: async (req, res) => {
-        try {
-            const { title, confirmDelete } = req.body;
-
-            if (!title || title.trim() === "") {
-                return res.status(400).json({ error: "Title is required" });
-            }
-
-            const category = await ProductCategory.findOne({ title: title.trim() });
-            if (!category) {
-                return res.status(404).json({ error: "Category not found" });
-            }
-
-            const relatedProducts = await ProductModel.find({ category: category._id });
-
-            // Nếu có sản phẩm mà chưa xác nhận thì thông báo
-            if (relatedProducts.length > 0 && !confirmDelete) {
-                return res.status(200).json({
-                    message: "Category has products. Confirm deletion?",
-                    productCount: relatedProducts.length,
-                    confirmRequired: true
-                });
-            }
-
-            // Nếu xác nhận rồi, thì xóa sản phẩm trước
-            if (relatedProducts.length > 0 && confirmDelete) {
-                await ProductModel.deleteMany({ category: category._id });
-            }
-
-            // Xóa category
-            await ProductCategory.deleteOne({ _id: category._id });
-
-            res.status(200).json({
-                message: `Deleted category "${title}" and ${relatedProducts.length} related products.`
-            });
-
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-    DeleteAllTiemProducts: async (req, res) => {
-        try {
-            await ProductCategory.deleteMany({});
-            res.status(200).json({ message: "All items deleted successfully" });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error("Error deleting category by title:", error);
+            res.status(500).json({ error: "Server error during deletion", details: error.message });
         }
     }
 }
 
 
-module.exports = ProductCategoryController;
+module.exports = CategoryController;

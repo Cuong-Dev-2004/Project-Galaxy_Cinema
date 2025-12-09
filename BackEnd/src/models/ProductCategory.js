@@ -1,4 +1,4 @@
-// models/ProductCategory.js
+
 const mongoose = require("mongoose");
 
 const ProductCategory = new mongoose.Schema({
@@ -9,7 +9,7 @@ const ProductCategory = new mongoose.Schema({
     },
     path: {
         type: String,
-        default: "/Products",
+        default: "",
     }
 }, {
     timestamps: true

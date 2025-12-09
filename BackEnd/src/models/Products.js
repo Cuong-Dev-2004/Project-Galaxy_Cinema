@@ -4,7 +4,6 @@ const productSchema = new mongoose.Schema({
     product_id: {
         type: Number,
         required: true,
-        unique: true,
         index: true,
     },
     product_name: {
@@ -32,8 +31,8 @@ const productSchema = new mongoose.Schema({
     },
     description_child: {
         type: String,
-        required: true,
-
+        required: false,
+        default: ""
     },
     introduce_produce: {
         type: [String],
@@ -50,11 +49,16 @@ const productSchema = new mongoose.Schema({
             },
         },
     ],
-    slug: { type: String, required: true, unique: true },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "ProductCategory",
         required: true,
+        index: true,
     },
 }, {
     timestamps: true,

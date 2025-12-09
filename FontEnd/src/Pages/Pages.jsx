@@ -5,8 +5,11 @@ import SideLinesMovie from "./SideLinesMovie";
 import ItemMovie from "../components/UI/ItemMovie";
 import undefinedPage from "./ErrorPage";
 import ViewFilms from "../components/UI/ViewFilms/ViewFilms";
+import Movie_List_Page from "./Movie_List_Page/Movie_List_Page";
+import BuyTicketPage from "./BuyTicketPage/BuyTicketPage.JSX";
+
 
 export {
-    ViewFilms
-    , HomePage, ViewProducts, Infomation_Products, SideLinesMovie, ItemMovie, undefinedPage
+    ViewFilms, BuyTicketPage
+    , HomePage, ViewProducts, Infomation_Products, SideLinesMovie, ItemMovie, undefinedPage, Movie_List_Page
 };

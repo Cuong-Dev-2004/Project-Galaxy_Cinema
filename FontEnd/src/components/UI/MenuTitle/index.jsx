@@ -1,28 +1,30 @@
 import { Link } from "react-router-dom";
 
-function MenuTitle({ Data }) {
-    const isProducts = Data[0]?.path === "/Products";
-
+function MenuTitle({ Data, type = "default" }) {
+    // type = "default" | "products" | "news" ... để bạn điều hướng khác nhau
     return (
-        <ul className="border-2 border-[#f5f5f5] bg-white py-2 text-center min-w-[230px]">
-            {Data.map((element, index) => (
-                <li
-                    key={element.id}
-                    className="hover:border-l-2 border-[var(--secondary-color)] px-3 py-2 hover:pl-2 hover:text-[var(--secondary-color)] cursor-pointer"
-                >
-                    <Link
-                        to={element.path}
-                        state={
-                            isProducts
-                                ? { Data, index: element.id - 1, title: element.id === 1 ? "ATVNCG" : "GLX Merch" }
-                                : { Data, index: element.title, id: index }
-                        }
-                        className="block w-full h-full"
+        <ul className="border border-[#eaeaea] bg-white py-2 text-center min-w-[230px] shadow-md rounded">
+            {Data.map((item, index) => {
+                // Xác định path dựa theo loại menu
+                let path = item.path || `/news/${item.id || item.dataMovie_id}`;
+
+                // Có thể gửi state thêm nếu cần
+                const stateData =
+                    type === "products"
+                        ? { type: "products", index, title: item.title, list: Data }
+                        : { type: type, index, title: item.title, list: Data };
+
+                return (
+                    <li
+                        key={item.id || item.dataMovie_id}
+                        className="px-3 py-2 cursor-pointer hover:text-[var(--secondary-color)] hover:bg-[#fafafa] text-[15px] transition-all"
                     >
-                        {element.title}
-                    </Link>
-                </li>
-            ))}
+                        <Link to={path} state={stateData} className="block w-full h-full">
+                            {item.title}
+                        </Link>
+                    </li>
+                );
+            })}
         </ul>
     );
 }

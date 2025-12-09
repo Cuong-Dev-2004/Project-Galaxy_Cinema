@@ -6,16 +6,16 @@ import Footer from './Footer'
 function Layout() {
 
     const location = useLocation();
-    const hideSidebarRoutes = ["/Products", "/Infomation", "/News", "/404Page"];
+    const hideSidebarRoutes = ["/Products", "/Infomation", "/News", "/404Page", "/ViewFilm"];
     const showSidebar = !hideSidebarRoutes.includes(location.pathname);
     return (
         <div className="min-h-screen flex flex-col">
             <Header />
-            <div>
+            <div >
                 {showSidebar && <SideBar />}
-                <div className='w-full max-w-[1400px] mx-auto '>
+                <main className=" bg-white rounded-2xl shadow p-6 w-full max-w-[1400px] mx-auto ">
                     <Outlet />
-                </div>
+                </main>
             </div>
             <Footer />
         </div>

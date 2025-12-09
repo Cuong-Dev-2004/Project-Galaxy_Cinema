@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Films } from "../../../ApiClone/Databases";
 import InfomationText from "../inFomationText/infomationText";
+import ItemMovie from "../ItemMovie";
 
 
 function ViewFilms({ ChildMainPage = true, props = [] }) {

@@ -1,6 +1,7 @@
-import Films from "./DatabaseMovie/DatabaseMovie"
+// import Films from "./DatabaseMovie/DatabaseMovie"
 import EvenMovie from "./eventMovie";
-import Products from "./ProductsCinemas/index"
-import sideLinesMove from "./sidelinesMovie";
 
-export { Films, Products, sideLinesMove, EvenMovie };
+import sideLinesMove from "./sidelinesMovie";
+import Films from "./DatabaseFilms/Films";
+import DatabaseMovie from "./DatabaseMovie/DatabaseMovie";
+export { Films, sideLinesMove, EvenMovie, DatabaseMovie };

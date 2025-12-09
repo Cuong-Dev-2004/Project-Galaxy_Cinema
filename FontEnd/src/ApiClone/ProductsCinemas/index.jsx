@@ -8,6 +8,9 @@ const Products = [
                 product_id: 1,
                 product_name: "ATVNCG The Movie - Premiere E-Voucher",
                 product_img: "https://cdn.galaxycine.vn/media/2025/4/18/02-sold-out-premiere-e-voucher_1744962700255.jpg",
+                product_img_array: [
+                    "https://cdn.galaxycine.vn/media/2025/4/18/02-sold-out-premiere-e-voucher_1744962700255.jpg"
+                ],
                 product_price: "220.000 ₫",
                 description: "Nội dung phim là câu chuyện hành trình tạo nên chương trình Anh Trai Vượt Ngàn Chông Gai 2024 với những góc khuất, những hình ảnh chưa từng được lên sóng và chưa từng được kể ở bất cứ đâu. Phim còn bao gồm những câu chuyện được kể bằng âm nhạc, bằng những tiết mục trong các đêm concert được dàn dựng công phu, chọn lọc kĩ càng và đan xen khéo léo những thước phim đầy cảm xúc của 33 Anh Tài.",
                 description_child: "",
